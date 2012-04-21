@@ -1,8 +1,27 @@
 application: maloquim
-version: 1
+version: epsilon
 runtime: go
 api_version: go1
 
 handlers:
+
+# Static content
+
+- url: /css
+  static_dir: css
+  mime_type: text/css
+
+- url: /js
+  static_dir: js
+  mime_type: text/javascript
+
+- url: /img
+  static_dir: img
+
+- url: /font
+  static_dir: font
+
+# The rest is handled by the application
+
 - url: /.*
   script: _go_app
