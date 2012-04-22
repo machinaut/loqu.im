@@ -21,6 +21,14 @@ handlers:
 - url: /font
   static_dir: font
 
+- url: /static/(.*)
+  static_files: static/\1
+  upload: static/(.*)
+
+- url: /index.html
+  static_files: index.html
+  upload: index.html
+
 # The rest is handled by the application
 
 - url: /.*
