@@ -7,24 +7,16 @@ handlers:
 
 # Static content
 
-- url: /css
-  static_dir: css
-  mime_type: text/css
+- url: /app
+  static_dir: extension/app
 
-- url: /js
-  static_dir: js
-  mime_type: text/javascript
+- url: /media
+  static_dir: extension/media
 
-- url: /img
-  static_dir: img
+- url: /theme
+  static_dir: extension/theme
 
-- url: /font
-  static_dir: font
-
-- url: /static/(.*)
-  static_files: static/\1
-  upload: static/(.*)
-
+# Just while I'm debugging the application
 - url: /index.html
   static_files: index.html
   upload: index.html
