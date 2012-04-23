@@ -1,8 +1,11 @@
-tst = "# Title Here\ntext here"
+test = [
+  '# Title Here'
+  'text here'
+]
 
 render = (text) ->
   out = ''
-  for line in text.split('\n')
+  for line in text
     tag = ''
     # LOOK AT THE PRETTY ARROW! I CAN HAZ GOOD CODEZ
     if line[0] is '#'
@@ -20,34 +23,31 @@ render = (text) ->
   return out
 
 explode = (thingy) ->
-  children = thingy.children
-  if children.length is 0 then return "#{thingy.text()}\n"
-  joy = ''
-  for child in children
-    joy += explode child
-  return joy
+  children = $(thingy).children()
+  if children.length is 0 then return $(thingy).text()
+  return (explode child for child in children)
 
 # possibly just reparse the whole document every freakign time.
 # that could work
 $ ->
   $('#app')
-    .html(render tst)
+    .html(render test)
     .attr('contenteditable','true')
-    .live 'focus', ->
+    .on 'focus', ->
       $this = $(this)
       $this.data 'before', $this.html()
       return $this
-    .live 'blur keyup paste', ->
+    .on 'blur keyup paste', ->
       $this = $(this)
       if $this.data('before') isnt $this.html()
         $this.data 'before', $this.html()
         $this.trigger('change')
       return $this
-    .live 'change', ->
+    .on 'change', ->
       $this = $(this)
-      $this.html render $this.html()
+      $this.html render explode this
       console.log 'changing!'
   $('#react')
-    .html render tst
+    .html(render test)
   console.log "I'm ready!"
 

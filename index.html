@@ -5,11 +5,6 @@
     <title>loqu.im</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="theme/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-      *:focus {
-        outline: none;
-      }
-    </style>
     <link href="theme/responsive.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -17,16 +12,17 @@
     <link rel="shortcut icon" href="media/favicon.ico">
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div id="app" class="span8">
-          APP
+    <div class="container">
+      <div class="row">
+        <div class="span6 offset3">
+          <div class="page-header">
+            <h1>loqu.im <small>Text Editor</small></h1>
+          </div>
+          <div id="app">
+            APP
+          </div>
         </div><!--/span-->
-        <div id="react" class="span4">
-          REACT
-        </div><!--/span-->
-      </div><!--/row-->
-    </div><!--/.fluid-container-->
+    </div><!--/.container-->
     <script src="app/jquery.js"></script>
     <script src="app/bootstrap-transition.js"></script>
     <script src="app/bootstrap-alert.js"></script>

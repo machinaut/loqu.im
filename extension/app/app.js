@@ -1,14 +1,13 @@
 (function() {
-  var explode, render, tst;
+  var explode, render, test;
 
-  tst = "# Title Here\ntext here";
+  test = ['# Title Here', 'text here'];
 
   render = function(text) {
-    var line, out, tag, _i, _len, _ref;
+    var line, out, tag, _i, _len;
     out = '';
-    _ref = text.split('\n');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      line = _ref[_i];
+    for (_i = 0, _len = text.length; _i < _len; _i++) {
+      line = text[_i];
       tag = '';
       if (line[0] === '#') {
         if (line[1] === '#') {
@@ -41,26 +40,29 @@
   };
 
   explode = function(thingy) {
-    var child, children, joy, _i, _len;
-    children = thingy.children;
+    var child, children;
+    children = $(thingy).children();
     if (children.length === 0) {
-      return "" + (thingy.text()) + "\n";
+      return $(thingy).text();
     }
-    joy = '';
-    for (_i = 0, _len = children.length; _i < _len; _i++) {
-      child = children[_i];
-      joy += explode(child);
-    }
-    return joy;
+    return (function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = children.length; _i < _len; _i++) {
+        child = children[_i];
+        _results.push(explode(child));
+      }
+      return _results;
+    })();
   };
 
   $(function() {
-    $('#app').html(render(tst)).attr('contenteditable', 'true').live('focus', function() {
+    $('#app').html(render(test)).attr('contenteditable', 'true').on('focus', function() {
       var $this;
       $this = $(this);
       $this.data('before', $this.html());
       return $this;
-    }).live('blur keyup paste', function() {
+    }).on('blur keyup paste', function() {
       var $this;
       $this = $(this);
       if ($this.data('before') !== $this.html()) {
@@ -68,13 +70,13 @@
         $this.trigger('change');
       }
       return $this;
-    }).live('change', function() {
+    }).on('change', function() {
       var $this;
       $this = $(this);
-      $this.html(render($this.html()));
+      $this.html(render(explode(this)));
       return console.log('changing!');
     });
-    $('#react').html(render(tst));
+    $('#react').html(render(test));
     return console.log("I'm ready!");
   });
 
