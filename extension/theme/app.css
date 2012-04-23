@@ -1,0 +1,3 @@
+#app [contenteditable=true]:focus {
+  outline: none;
+}
