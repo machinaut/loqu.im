@@ -16,24 +16,24 @@ option '-q', '--quiet', 'Only diplay errors'
 option '-w', '--watch', 'Watch files for change and automatically recompile'
 
 task 'compile', "Compile all files", (options) ->
-  task_coffee(options)
-  task_less(options)
+  task_coffee options
+  task_less options
 
 task 'compile:coffee', "Compile all coffee files", (options) ->
-  task_coffee(options)
+  task_coffee options
 
 task 'compile:less', "Compile all less files", (options) ->
-  task_less(options)
+  task_less options
 
 fs = require 'fs'
-cs = require('coffee-script')
-parser = new require('less').Parser paths: [LESS_DIR]
+cs = require 'coffee-script'
+less = require 'less'
 
 compile_coffee = (options, infile, outfile) ->
   try
     src = fs.readFileSync infile, 'utf8'
     out = cs.compile src
-    console.log " + #{outfile} (#{infile})[#{out.length}]" unless options.quiet
+    console.log " + #{outfile} (#{infile})" unless options.quiet
     fs.writeFileSync outfile, out
   catch err
     console.log " - #{outfile} (#{infile})"
@@ -42,10 +42,9 @@ compile_coffee = (options, infile, outfile) ->
 compile_less = (options, infile, outfile) ->
   try
     src = fs.readFileSync infile, 'utf8'
-    out = parser.parse src, (e, tree) -> 
+    less.render src, paths: [LESS_DIR], (e, out) -> 
       throw e if e
-      out = tree.toCSS()
-      console.log " + #{outfile} (#{infile})[#{out.length}]" unless options.quiet
+      console.log " + #{outfile} (#{infile})" unless options.quiet
       fs.writeFileSync outfile, out
   catch err
     console.log " - #{outfile} (#{infile})"
