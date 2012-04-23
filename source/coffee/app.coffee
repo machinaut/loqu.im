@@ -19,7 +19,13 @@ render = (text) ->
     out += "<#{tag}>#{line}</#{tag}>"
   return out
 
-#explode = (t) ->
+explode = (thingy) ->
+  children = thingy.children
+  if children.length is 0 then return "#{thingy.text()}\n"
+  joy = ''
+  for child in children
+    joy += explode child
+  return joy
 
 # possibly just reparse the whole document every freakign time.
 # that could work

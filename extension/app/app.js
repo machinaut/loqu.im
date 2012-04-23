@@ -1,5 +1,5 @@
 (function() {
-  var render, tst;
+  var explode, render, tst;
 
   tst = "# Title Here\ntext here";
 
@@ -38,6 +38,20 @@
       out += "<" + tag + ">" + line + "</" + tag + ">";
     }
     return out;
+  };
+
+  explode = function(thingy) {
+    var child, children, joy, _i, _len;
+    children = thingy.children;
+    if (children.length === 0) {
+      return "" + (thingy.text()) + "\n";
+    }
+    joy = '';
+    for (_i = 0, _len = children.length; _i < _len; _i++) {
+      child = children[_i];
+      joy += explode(child);
+    }
+    return joy;
   };
 
   $(function() {
