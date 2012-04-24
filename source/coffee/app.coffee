@@ -1,6 +1,39 @@
-test = [
+spanify = (line) -> ("<span>#{c}</span>" for c in line.split '').join ''
+
+# TODO put a method on the model that recalculates the tag
+# TODO put an event that fires the tagcalculator on 'change:text'
+Line = Backbone.Model.extend
+  defaults:
+    tag: 'div'
+    text: ''
+
+
+LineView = Backbone.View.extend
+  render: ->
+    text = this.model.get 'text'
+    tag  = this.model.get 'tag'
+    html = "<#{tag}>#{spanify text}</#{tag}>"
+    this.$el.html html
+
+Doc = Backbone.Collection.extend 
+  model: Line
+
+doc = new Doc
+
+lines = [ 
+  {t: '# Title Here'}
+  {t: 'text here'}
+  {t: '## Subtitle here'}
+  {t: 'more text'}
+]
+
+doc.reset lines
+
+test = [ 
   '# Title Here'
   'text here'
+  '## Subtitle here'
+  'more text'
 ]
 
 render = (text) ->
@@ -19,6 +52,7 @@ render = (text) ->
         else tag = 'h2'
       else tag = 'h1'
     else tag = 'p'
+    line = spanify line
     out += "<#{tag}>#{line}</#{tag}>"
   return out
 
@@ -31,23 +65,6 @@ explode = (thingy) ->
 # that could work
 $ ->
   $('#app')
-    .html(render test)
-    .attr('contenteditable','true')
-    .on 'focus', ->
-      $this = $(this)
-      $this.data 'before', $this.html()
-      return $this
-    .on 'blur keyup paste', ->
-      $this = $(this)
-      if $this.data('before') isnt $this.html()
-        $this.data 'before', $this.html()
-        $this.trigger('change')
-      return $this
-    .on 'change', ->
-      $this = $(this)
-      $this.html render explode this
-      console.log 'changing!'
-  $('#react')
     .html(render test)
   console.log "I'm ready!"
 

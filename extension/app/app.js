@@ -1,7 +1,58 @@
 (function() {
-  var explode, render, test;
+  var Doc, Line, LineView, doc, explode, lines, render, spanify, test;
 
-  test = ['# Title Here', 'text here'];
+  spanify = function(line) {
+    var c;
+    return ((function() {
+      var _i, _len, _ref, _results;
+      _ref = line.split('');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        c = _ref[_i];
+        _results.push("<span>" + c + "</span>");
+      }
+      return _results;
+    })()).join('');
+  };
+
+  Line = Backbone.Model.extend({
+    defaults: {
+      tag: 'div',
+      text: ''
+    }
+  });
+
+  LineView = Backbone.View.extend({
+    render: function() {
+      var html, tag, text;
+      text = this.model.get('text');
+      tag = this.model.get('tag');
+      html = "<" + tag + ">" + (spanify(text)) + "</" + tag + ">";
+      return this.$el.html(html);
+    }
+  });
+
+  Doc = Backbone.Collection.extend({
+    model: Line
+  });
+
+  doc = new Doc;
+
+  lines = [
+    {
+      t: '# Title Here'
+    }, {
+      t: 'text here'
+    }, {
+      t: '## Subtitle here'
+    }, {
+      t: 'more text'
+    }
+  ];
+
+  doc.reset(lines);
+
+  test = ['# Title Here', 'text here', '## Subtitle here', 'more text'];
 
   render = function(text) {
     var line, out, tag, _i, _len;
@@ -34,6 +85,7 @@
       } else {
         tag = 'p';
       }
+      line = spanify(line);
       out += "<" + tag + ">" + line + "</" + tag + ">";
     }
     return out;
@@ -57,26 +109,7 @@
   };
 
   $(function() {
-    $('#app').html(render(test)).attr('contenteditable', 'true').on('focus', function() {
-      var $this;
-      $this = $(this);
-      $this.data('before', $this.html());
-      return $this;
-    }).on('blur keyup paste', function() {
-      var $this;
-      $this = $(this);
-      if ($this.data('before') !== $this.html()) {
-        $this.data('before', $this.html());
-        $this.trigger('change');
-      }
-      return $this;
-    }).on('change', function() {
-      var $this;
-      $this = $(this);
-      $this.html(render(explode(this)));
-      return console.log('changing!');
-    });
-    $('#react').html(render(test));
+    $('#app').html(render(test));
     return console.log("I'm ready!");
   });
 
